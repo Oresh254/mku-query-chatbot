@@ -1,0 +1,150 @@
+<?php
+// Include your database connection file
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "login_system";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password for security
+
+    // Insert data into the database
+    $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $password);  // "ss" denotes two string parameters
+    if ($stmt->execute()) {
+        echo "Registration successful! <a href='index.php'>Go to login</a>";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+                                                                                                <?php
+session_start();
+include 'db_connect.php'; // Include your database connection file
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the username from the form
+    $username = trim($_POST['username']);
+    
+    // Check if username ex<?php
+session_start();
+
+// Include your database connection file
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "login_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if the reset token is provided in the URL
+if (!isset($_GET['token'])) {
+    die("Invalid request. No token provided.");
+}
+
+$token = $_GET['token'];
+
+// Check if the reset token is valid
+$stmt = $conn->prepare("SELECT * FROM users WHERE reset_token = ?");
+$stmt->bind_param("s", $token);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    die("Invalid request. Token does not exist or has expired.");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $newPassword = trim($_POST['password']);
+
+    // Basic validation
+    if (empty($newPassword)) {
+        echo "Password is required.";
+        exit;
+    }
+
+    // Update the password in the database for the user associated with the token
+    $sql = "UPDATE users SET password = ?, reset_token = NULL WHERE reset_token = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $newPassword, $token);
+
+    if ($stmt->execute()) {
+        echo "Password has been reset successfully! <a href='index.php'>Go to login</a>";
+    } else {
+        echo "Error updating password: " . $stmt->error; // Show error from the statement
+    }
+
+    $stmt->close();
+}
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+</head>
+<body>
+    <form action="" method="post">
+        <label for="password">New Password:</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Reset Password</button>
+    </form>
+</body>
+</html>
+ists
+    $sql = "SELECT * FROM users WHERE username = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Generate a new random password
+        $newPassword = bin2hex(random_bytes(4)); // Generates a random password of 8 characters
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Update the password in the database
+        $updateSql = "UPDATE users SET password = ? WHERE username = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("ss", $hashedPassword, $username);
+
+        if ($updateStmt->execute()) {
+            echo "Your new password is: " . htmlspecialchars($newPassword); // Display the new password
+            echo "<br><a href='index.php'>Go to login</a>"; // Provide a link to login
+        } else {
+            echo "Error updating password: " . $updateStmt->error;
+        }
+
+        $updateStmt->close();
+    } else {
+        echo "Username not found.";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>

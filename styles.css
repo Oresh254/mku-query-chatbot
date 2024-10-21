@@ -1,0 +1,72 @@
+:root {
+    --body-background-color: rgb(31, 36, 37);
+    --login-container-background-color: rgb(241, 231, 231);
+    --button-background-color: black;
+    --button-hover-color: rgb(221, 19, 19);
+    --link-color: #007bff;
+    --link-hover-color: #0056b3; /* Darker shade for hover */
+    --input-border-color: #ccc; /* Border color for inputs */
+}
+
+body {
+    font: Arial, sans-serif;
+    background-color: var(--body-background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0; /* Updated margin to 0 for proper alignment */
+}
+
+.login-container {
+    background-color: var(--login-container-background-color);
+    text-align: center;
+    padding: 20px; /* Optional: Add padding for better spacing */
+    border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.login-container input {
+    width: 75%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid var(--input-border-color);
+    border-radius: 5px;
+}
+
+.login-container button {
+    width: 50%;
+    padding: 10px;
+    background-color: var(--button-background-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: var(--button-hover-color);
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.signup-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--link-color);
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make the link bold */
+}
+
+.signup-link:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: var(--link-hover-color); /* Change link color on hover */
+}
